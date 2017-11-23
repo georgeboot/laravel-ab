@@ -18,7 +18,7 @@ class RunABTest
     public function handle($request, Closure $next, $guard = null)
     {
         // Start the A/B tracking
-        $this->app['ab']->track($request);
+        app('ab')->track($request);
 
         return $next($request);
     }
