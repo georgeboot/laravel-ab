@@ -10,7 +10,8 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class ExportCommand extends Command {
+class ExportCommand extends Command
+{
 
     /**
      * The console command name.
@@ -41,7 +42,7 @@ class ExportCommand extends Command {
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $experiments = Experiment::active()->get();
         $goals = array_unique(Goal::active()->orderBy('name')->lists('name'));
@@ -51,8 +52,7 @@ class ExportCommand extends Command {
         $writer = Writer::createFromFileObject(new SplTempFileObject);
         $writer->insertOne($columns);
 
-        foreach ($experiments as $experiment)
-        {
+        foreach ($experiments as $experiment) {
             $engagement = $experiment->visitors ? ($experiment->engagement / $experiment->visitors * 100) : 0;
 
             $row = [
@@ -63,8 +63,7 @@ class ExportCommand extends Command {
 
             $results = $experiment->goals()->lists('count', 'name');
 
-            foreach ($goals as $column)
-            {
+            foreach ($goals as $column) {
                 $count = array_get($results, $column, 0);
                 $percentage = $experiment->visitors ? ($count / $experiment->visitors * 100) : 0;
 
@@ -76,14 +75,11 @@ class ExportCommand extends Command {
 
         $output = (string) $writer;
 
-        if ($file = $this->argument('file'))
-        {
+        if ($file = $this->argument('file')) {
             $this->info("Creating $file");
 
             File::put($file, $output);
-        }
-        else
-        {
+        } else {
             $this->line($output);
         }
     }
@@ -109,5 +105,4 @@ class ExportCommand extends Command {
     {
         return array();
     }
-
 }

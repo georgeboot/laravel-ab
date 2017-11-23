@@ -9,7 +9,8 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class InstallCommand extends Command {
+class InstallCommand extends Command
+{
 
     /**
      * The console command name.
@@ -40,15 +41,13 @@ class InstallCommand extends Command {
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $connection = Config::get('ab::connection');
 
         // Create experiments table.
-        if ( ! Schema::connection($connection)->hasTable('experiments'))
-        {
-            Schema::connection($connection)->create('experiments', function($table)
-            {
+        if (! Schema::connection($connection)->hasTable('experiments')) {
+            Schema::connection($connection)->create('experiments', function ($table) {
                 $table->string('name');
                 $table->integer('visitors')->unsigned()->default(0);
                 $table->integer('engagement')->unsigned()->default(0);
@@ -56,10 +55,8 @@ class InstallCommand extends Command {
         }
 
         // Create goals table.
-        if ( ! Schema::connection($connection)->hasTable('goals'))
-        {
-            Schema::connection($connection)->create('goals', function($table)
-            {
+        if (! Schema::connection($connection)->hasTable('goals')) {
+            Schema::connection($connection)->create('goals', function ($table) {
                 $table->string('name');
                 $table->string('experiment');
                 $table->integer('count')->unsigned()->default(0);
@@ -71,25 +68,21 @@ class InstallCommand extends Command {
 
         $experiments = Config::get('ab::experiments');
 
-        if ( ! $experiments or empty($experiments))
-        {
+        if (! $experiments or empty($experiments)) {
             return $this->error('No experiments configured.');
         }
 
         $goals = Config::get('ab::goals');
 
-        if ( ! $goals or empty($goals))
-        {
+        if (! $goals or empty($goals)) {
             return $this->error('No goals configured.');
         }
 
         // Populate experiments and goals.
-        foreach ($experiments as $experiment)
-        {
+        foreach ($experiments as $experiment) {
             Experiment::firstOrCreate(['name' => $experiment]);
 
-            foreach ($goals as $goal)
-            {
+            foreach ($goals as $goal) {
                 Goal::firstOrCreate(['name' => $goal, 'experiment' => $experiment]);
             }
         }
@@ -116,5 +109,4 @@ class InstallCommand extends Command {
     {
         return array();
     }
-
 }

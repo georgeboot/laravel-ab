@@ -8,7 +8,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Helper\Table;
 
-class ReportCommand extends Command {
+class ReportCommand extends Command
+{
 
     /**
      * The console command name.
@@ -39,7 +40,7 @@ class ReportCommand extends Command {
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $experiments = Experiment::active()->get();
         $goals = array_unique(Goal::active()->orderBy('name')->lists('name'));
@@ -49,8 +50,7 @@ class ReportCommand extends Command {
         $table = new Table($this->output);
         $table->setHeaders($columns);
 
-        foreach ($experiments as $experiment)
-        {
+        foreach ($experiments as $experiment) {
             $engagement = $experiment->visitors ? ($experiment->engagement / $experiment->visitors * 100) : 0;
 
             $row = [
@@ -61,8 +61,7 @@ class ReportCommand extends Command {
 
             $results = $experiment->goals()->lists('count', 'name');
 
-            foreach ($goals as $column)
-            {
+            foreach ($goals as $column) {
                 $count = array_get($results, $column, 0);
                 $percentage = $experiment->visitors ? ($count / $experiment->visitors * 100) : 0;
 
@@ -94,5 +93,4 @@ class ReportCommand extends Command {
     {
         return array();
     }
-
 }

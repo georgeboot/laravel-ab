@@ -1,6 +1,7 @@
 <?php namespace Jenssegers\AB\Session;
 
-interface SessionInterface {
+interface SessionInterface
+{
 
     /**
      * Returns an attribute.
@@ -30,5 +31,4 @@ interface SessionInterface {
      * @api
      */
     public function clear();
-
 }

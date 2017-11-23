@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class LaravelSession implements SessionInterface {
+class LaravelSession implements SessionInterface
+{
 
     /**
      * The session key.
@@ -53,5 +54,4 @@ class LaravelSession implements SessionInterface {
 
         return Session::forget($this->sessionName);
     }
-
 }

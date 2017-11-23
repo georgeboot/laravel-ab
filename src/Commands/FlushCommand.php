@@ -9,7 +9,8 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class FlushCommand extends Command {
+class FlushCommand extends Command
+{
 
     /**
      * The console command name.
@@ -40,7 +41,7 @@ class FlushCommand extends Command {
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $connection = Config::get('ab::connection');
 
@@ -71,5 +72,4 @@ class FlushCommand extends Command {
     {
         return array();
     }
-
 }

@@ -5,7 +5,8 @@ use Jenssegers\AB\Session\CookieSession;
 
 use Illuminate\Support\ServiceProvider;
 
-class TesterServiceProvider extends ServiceProvider {
+class TesterServiceProvider extends ServiceProvider
+{
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -21,14 +22,9 @@ class TesterServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        // Fix for PSR-4
-        $this->package('jenssegers/ab', 'ab', realpath(__DIR__));
-
-        // Start the A/B tracking when routing starts.
-        $this->app->before(function($request)
-        {
-            $this->app['ab']->track($request);
-        });
+        $this->publishes([
+            __DIR__.'/config/config.php' => config_path('ab.php')
+        ], 'config');
     }
 
     /**
@@ -38,8 +34,12 @@ class TesterServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        $this->app['ab'] = $this->app->share(function($app)
-        {
+        $this->mergeConfigFrom(
+            __DIR__.'/config/config.php',
+            'ab'
+        );
+        
+        $this->app->singleton('ab', function ($app) {
             return new Tester(new CookieSession);
         });
 
@@ -57,19 +57,18 @@ class TesterServiceProvider extends ServiceProvider {
         $commands = ['install', 'flush', 'report', 'export'];
 
         // Bind the command objects.
-        foreach ($commands as &$command)
-        {
+        foreach ($commands as &$command) {
             $class = 'Jenssegers\\AB\\Commands\\' . ucfirst($command) . 'Command';
             $command = "ab::command.$class";
 
-            $this->app->bind($command, function($app) use ($class)
-            {
+            $this->app->bind($command, function ($app) use ($class) {
                 return new $class();
             });
         }
 
         // Register artisan commands.
-        $this->commands($commands);
+        if ($this->app->runningInConsole()) {
+            $this->commands($commands);
+        }
     }
-
 }

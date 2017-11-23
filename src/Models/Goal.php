@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Goal extends Eloquent {
-
+class Goal extends Eloquent
+{
     protected $primaryKey = 'name';
 
     public $timestamps = false;
@@ -21,12 +21,10 @@ class Goal extends Eloquent {
 
     public function scopeActive($query)
     {
-        if ($experiments = Config::get('ab::experiments'))
-        {
+        if ($experiments = Config::get('ab::experiments')) {
             return $query->whereIn('experiment', Config::get('ab::experiments'));
         }
 
         return $query;
     }
-
 }
