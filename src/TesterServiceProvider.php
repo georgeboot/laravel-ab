@@ -40,7 +40,7 @@ class TesterServiceProvider extends ServiceProvider
         );
         
         $this->app->singleton('ab', function ($app) {
-            return new Tester(new CookieSession);
+            return new Tester(new LaravelSession);
         });
 
         $this->registerCommands();
