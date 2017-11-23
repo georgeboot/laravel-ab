@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Goal extends Eloquent
 {
-    protected $primaryKey = 'name';
+    // protected $primaryKey = 'name';
 
     public $timestamps = false;
 
@@ -22,7 +22,7 @@ class Goal extends Eloquent
     public function scopeActive($query)
     {
         if ($experiments = Config::get('ab::experiments')) {
-            return $query->whereIn('experiment', Config::get('ab::experiments'));
+            return $query->whereIn('experiment', $experiments);
         }
 
         return $query;
