@@ -48,7 +48,8 @@ class InstallCommand extends Command
         // Create experiments table.
         if (! Schema::connection($connection)->hasTable('experiments')) {
             Schema::connection($connection)->create('experiments', function ($table) {
-                $table->string('name');
+                $table->increments('id');
+                $table->string('name')->index();
                 $table->integer('visitors')->unsigned()->default(0);
                 $table->integer('engagement')->unsigned()->default(0);
             });
@@ -57,10 +58,12 @@ class InstallCommand extends Command
         // Create goals table.
         if (! Schema::connection($connection)->hasTable('goals')) {
             Schema::connection($connection)->create('goals', function ($table) {
+                $table->increments('id');
                 $table->string('name');
                 $table->string('experiment');
                 $table->integer('count')->unsigned()->default(0);
-                $table->primary(array('name', 'experiment'));
+
+                $table->index(['name', 'experiment']);
             });
         }
 
