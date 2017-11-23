@@ -42,7 +42,7 @@ class LaravelSession implements SessionInterface
     {
         $this->data[$name] = $value;
 
-        return Session::set($this->sessionName, $this->data);
+        return Session::put($this->sessionName, $this->data);
     }
 
     /**
